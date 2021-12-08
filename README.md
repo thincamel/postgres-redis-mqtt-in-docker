@@ -1,3 +1,3 @@
 # postgres-redis-in-docker
 
-Just for integrating service images
+Just for integrate service that development environment depends on

@@ -1,0 +1,51 @@
+version: '3'
+# docker-compose run web django-admin.py startproject composeexample .
+# docker volume create pgdata
+# docker volume create redis_data
+# docker-compose up --build
+# create database by: psql -h localhost -p 5432 -U postgres
+
+services:
+  redis:
+    restart: always
+    image: redis
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+
+  db:
+    restart: always
+    image: postgres
+    env_file: ./postgres/.env
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment: 
+      PGADMIN_DEFAULT_EMAIL: xie.zhen@theiota.cn
+      PGADMIN_DEFAULT_PASSWORD: dingx1024_
+    volumes:
+      - pgadmin_data:/var/lib/postgresql/.pgadmin
+    ports:
+      - "5050:80"
+  
+  mosquitto:
+    image: "eclipse-mosquitto"
+    container_name: mosquitto
+    ports:
+      - "1883:1883"
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+      - ./mosquitto/log:/mosquitto/log
+    #command: ['mosquitto', '-c', '/mosquitto/config/mosquitto.conf']
+
+volumes:
+  redis_data:
+  pgdata:
+  pgadmin_data:
